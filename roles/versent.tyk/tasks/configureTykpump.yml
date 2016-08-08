@@ -1,0 +1,12 @@
+---
+
+- debug: 
+    msg: "Configuring 'tyk pump'"
+
+- name: configuring 'tyk pump'
+  command: /opt/tyk-pump/install/setup.sh --redishost=localhost --redisport=6379 --mongo=mongodb://127.0.0.1/tyk_analytics
+
+- name: Start 'tyk pump' service
+  service:
+    name: tyk-pump
+    state: started

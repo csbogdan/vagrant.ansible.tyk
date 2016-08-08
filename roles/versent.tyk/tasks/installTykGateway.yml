@@ -1,0 +1,27 @@
+---
+
+- debug: 
+    msg: "Installing 'tyk gateway'"
+
+- name: Check if 'tyk-gateway' is installed
+  command: dpkg-query -W tyk-gateway
+  register: tyk_gateway_check_deb
+  failed_when: tyk_gateway_check_deb.rc > 1
+  changed_when: tyk_gateway_check_deb.rc == 1
+
+- name: Downloading 'tyk-gateway' bash scripts
+  get_url: 
+    url: https://packagecloud.io/install/repositories/tyk/tyk-gateway/script.deb.sh
+    dest: "/tmp/tyk-gateway-script.deb.sh"
+    mode: 0700
+  when: tyk_gateway_check_deb.rc == 1
+
+- name: Executing 'tyk-gateway-script.deb.sh' scripts
+  raw: "/tmp/tyk-gateway-script.deb.sh"
+  when: tyk_gateway_check_deb.rc == 1
+
+- name: install 'tyk-gateway'
+  apt:
+    name: "tyk-gateway"
+    state: present
+  when: tyk_gateway_check_deb.rc == 1

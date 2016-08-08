@@ -1,0 +1,33 @@
+---
+
+- debug: 
+    msg: "Configuring 'tyk gateway'"
+
+- name: Check if 'tyk gateway' has been installed.
+  stat: 
+    path: /opt/tyk-dashboard/logindetails.txt
+  register: tykGateway_deployed  
+
+- name: configuring 'tyk gateway'
+  command: /opt/tyk-gateway/install/setup.sh --dashboard=http://my-tyk-instance.com:3000 --listenport=8080 --redishost=localhost --redisport=6379 --domain=""
+  when: tykGateway_deployed.stat.exists == False
+
+- name: Start 'tyk gateway' service
+  service:
+    name: tyk-gateway 
+    state: started  
+  when: not((license_key is undefined) or (license_key is none) or (license_key|trim == ''))
+
+- debug: msg="'tyk gateway' service started"
+  when: not((license_key is undefined) or (license_key is none) or (license_key|trim == ''))
+
+- debug: msg="'tyk gateway' service not started. Need to provide a 'license_key'"
+  when: ((license_key is undefined) or (license_key is none) or (license_key|trim == ''))  
+
+- name: Bootstrapping 'tyk gateway'
+  shell: /opt/tyk-dashboard/install/bootstrap.sh my-tyk-instance.com | tee /opt/tyk-dashboard/logindetails.txt
+  register: bootstrapOutput
+  when: ( not((license_key is undefined) or (license_key is none) or (license_key|trim == '')) ) and ( tykGateway_deployed.stat.exists == False )
+
+- debug: msg="Check '/opt/tyk-dashboard/logindetails.txt' for login details"
+  when: not((license_key is undefined) or (license_key is none) or (license_key|trim == ''))

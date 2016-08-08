@@ -1,0 +1,23 @@
+---
+
+- debug: msg="Deploying Tyk"
+
+- include: installPreRequisites.yml
+
+- include: installTykGateway.yml
+  when: install_gateway
+
+- include: installTykDashboard.yml
+  when: install_dashboard
+
+- include: installTykPump.yml
+  when: install_pump
+
+- include: configureTykDashboard.yml
+  when: install_dashboard
+
+- include: configureTykPump.yml
+  when: install_pump
+
+- include: configureTykGateway.yml
+  when: install_gateway

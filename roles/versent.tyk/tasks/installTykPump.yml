@@ -1,0 +1,27 @@
+---
+
+- debug: 
+    msg: "Installing 'tyk pump'"
+
+- name: Check if 'tyk-pump' is installed
+  command: dpkg-query -W tyk-pump
+  register: tyk_pump_check_deb
+  failed_when: tyk_pump_check_deb.rc > 1
+  changed_when: tyk_pump_check_deb.rc == 1
+  
+- name: Downloading 'tyk-pump' bash scripts
+  get_url: 
+    url: https://packagecloud.io/install/repositories/tyk/tyk-pump/script.deb.sh
+    dest: "/tmp/tyk-pump-script.deb.sh"
+    mode: 0700
+  when: tyk_pump_check_deb.rc == 1
+ 
+- name: Executing 'tyk-pump-script.deb.sh' scripts
+  raw: "/tmp/tyk-pump-script.deb.sh"
+  when: tyk_pump_check_deb.rc == 1
+
+- name: install 'tyk-pump'
+  apt:
+    name: "tyk-pump"
+    state: present
+  when: tyk_pump_check_deb.rc == 1

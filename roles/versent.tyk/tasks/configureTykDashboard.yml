@@ -1,0 +1,27 @@
+---
+
+- debug: 
+    msg: "Configuring 'tyk dashboard'"
+
+- name: configuring 'tyk dashboard'
+  command: /opt/tyk-dashboard/install/setup.sh --listenport=3000 --redishost=localhost --redisport=6379 --mongo=mongodb://127.0.0.1/tyk_analytics --tyk_api_hostname=$HOSTNAME --tyk_node_hostname=http://localhost --tyk_node_port=8080 --portal_root=/portal --domain="my-tyk-instance.com"
+
+- debug: var=license_key
+  when: not((license_key is undefined) or (license_key is none) or (license_key|trim == ''))
+
+- name: update 'license_key'
+  lineinfile:
+    dest: /opt/tyk-dashboard/tyk_analytics.conf 
+    regexp: '(.*)"license_key"'
+    line: '\1"license_key": "{{ license_key }}",'
+    state: present
+    backrefs: yes
+  notify: restartTykDashboard
+  when: not((license_key is undefined) or (license_key is none) or (license_key|trim == ''))
+
+- name: Start 'tyk dashboard' service
+  service:
+    name: tyk-dashboard 
+    state: started
+
+- debug: msg="Open a browser to http://my-tyk-instance.com:3000"

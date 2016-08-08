@@ -1,0 +1,6 @@
+---
+install_gateway: yes
+install_dashboard: yes
+install_pump: yes
+
+license_key:

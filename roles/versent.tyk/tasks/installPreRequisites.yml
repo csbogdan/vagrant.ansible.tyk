@@ -1,0 +1,31 @@
+---
+
+- debug: 
+    msg: "Installing Mongo and Redis"
+
+- name: Configuring 'apt' resources 
+  apt_key: 
+    keyserver: keyserver.ubuntu.com 
+    id: 7F0CEB10
+
+- name: Adding 'mongo' to 'apt'
+  lineinfile: 
+    dest: /etc/apt/sources.list.d/mongodb.list
+    state: present
+    create: yes
+    line: "deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen"
+ 
+- name: Updating 'apt'
+  apt: 
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: install 'redis' and 'mongo'
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - mongodb-org 
+    - redis-server 
+    - vim 
+    - curl   

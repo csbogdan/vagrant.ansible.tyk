@@ -1,0 +1,6 @@
+---
+
+- name: restartTykDashboard
+  service: 
+    name: tyk-dashboard
+    state: restarted
