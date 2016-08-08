@@ -48,7 +48,7 @@ In order to deploy a license key is required for the product, which a 60 day fre
     ```
 
 # Deploy Tyk
-Follow these steps to get a Tyk envvironment up and running. It uses the default values as per the instructions @  https://tyk.io/docs/tyk-api-gateway-v-2-0/installation-options-setup/vagrant/
+Follow these steps to get a Tyk environment up and running. It uses the default values as per the instructions @  https://tyk.io/docs/tyk-api-gateway-v-2-0/installation-options-setup/vagrant/
 
 -   Start the `vagrant up`  process
     ```
@@ -56,7 +56,7 @@ Follow these steps to get a Tyk envvironment up and running. It uses the default
     vagrant up
     ```
 
--   Once completed the bootstrap details will be availabke @ `/opt/tyk-dashboard/logindetails.txt`
+-   Once completed the bootstrap details will be available @ `/opt/tyk-dashboard/logindetails.txt`
     ```
     vagrant ssh
     sudo -i
